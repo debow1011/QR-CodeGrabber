@@ -1,0 +1,8 @@
+beautifulsoup4
+selenium
+pillow
+lxml
+requests
+colorama
+discord_webhook
+discord
