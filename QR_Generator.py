@@ -10,6 +10,7 @@ import colorama
 from discord_webhook import DiscordWebhook, DiscordEmbed
 import datetime
 from selenium.webdriver.chrome.service import Service
+import lxml
 
 colorama.init()
 
