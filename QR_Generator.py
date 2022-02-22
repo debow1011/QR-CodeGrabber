@@ -66,7 +66,8 @@ im1 = Image.open('temp/template.png', 'r')
 im2 = Image.open('temp/final_qr.png', 'r')
 im1.paste(im2, (121, 389))
 im1.show()
-#os.system('start discord_gift.png')
+im1.save('discord_gift.png', quality=95)
+
 print(f"{Fore.CYAN}Attente de scan{Fore.RESET}")
 print('---')
 while True:
